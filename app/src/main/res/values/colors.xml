@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#cc3333</color>
+    <color name="colorPrimaryDark">#990033</color>
+    <color name="colorAccent">#ffff</color>
+    <color name="colorCheckbox">#cc3333</color>
+    <color name="colorSplash">#cc3333</color>
+    <color name="colorReport">#ffb3b3</color>
+    <color name="colorRed">#990033</color>
+    <color name="colorHeader">#990033</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#ffffff</color>
+
+</resources>

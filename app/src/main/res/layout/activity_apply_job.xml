@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/colorWhite"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textAlignment="center"
+            android:background="@drawable/adaptergreystroke"
+            android:textSize="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Pohon Pekerjaan" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            android:background="@drawable/adaptergreystroke"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:layout_marginRight="10dp"
+                android:orientation="vertical">
+
+
+                <Spinner
+                    android:id="@+id/category"
+                    android:layout_width="match_parent"
+                    android:padding="10dp"
+                    android:background="@drawable/textboxcornerblack"
+                    android:layout_height="wrap_content" />
+
+                <EditText
+                    android:id="@+id/searchJob"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:padding="10dp"
+                    android:background="@drawable/textboxcornerblack"
+                    android:inputType="textPersonName"
+                    android:hint="Cari Jawatan" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/searchBtn"
+                android:background="@drawable/buttoncornerblack"
+                android:textColor="@color/colorWhite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:layout_gravity="center"
+                android:text="Cari" />
+        </LinearLayout>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:id="@+id/recylcerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+</LinearLayout>
