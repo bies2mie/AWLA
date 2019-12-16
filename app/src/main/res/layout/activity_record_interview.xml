@@ -3,39 +3,157 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/record"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Record Video" />
+        android:orientation="vertical">
 
-    <Button
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textAlignment="center"
+            android:background="@drawable/adaptergreystroke"
+            android:textSize="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Temu Duga" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Choose File"
-        android:id="@+id/buttonChoose" />
+        android:background="@drawable/adaptergreystroke"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        <TextView
+            android:id="@+id/showJobTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_marginTop="10dp"
+            android:text="IT System Engineer" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:text="Upload"
-        android:id="@+id/buttonUpload" />
+        <TextView
+            android:id="@+id/showCompanyTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Mietrix Software" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_marginTop="10dp"
-        android:id="@+id/textViewResponse"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:padding="10dp"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <fragment
+                android:id="@+id/youtube_player_fragment"
+                android:name="com.google.android.youtube.player.YouTubePlayerFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+
+            <LinearLayout
+                android:background="@drawable/textboxcornergrey"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/quesNum"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="Soalan 1"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/quesTxt"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Ceritakan serba sedikit tentang diri anda" />
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="50dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/record"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttoncornerwhite"
+                        android:text="Rakam Video" />
+
+                    <Button
+                        android:id="@+id/buttonChoose"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/buttoncornerblack"
+                        android:text="Pilih Fail"
+                        android:textColor="@color/colorWhite" />
+                </LinearLayout>
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:id="@+id/termServ"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/term" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:textColor="@color/colorMustard"
+                android:text="Video Path" />
+
+            <Button
+                android:id="@+id/buttonUpload"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:background="@drawable/buttoncornerbluegrad"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="Hantar" />
+
+            <TextView
+                android:id="@+id/textViewResponse"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

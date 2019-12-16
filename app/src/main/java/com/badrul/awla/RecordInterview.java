@@ -1,8 +1,11 @@
 package com.badrul.awla;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,28 +20,46 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadNotificationConfig;
 
+import java.util.List;
 import java.util.UUID;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class RecordInterview extends AppCompatActivity implements View.OnClickListener {
+public class RecordInterview extends AppCompatActivity implements View.OnClickListener,EasyPermissions.PermissionCallbacks,YouTubePlayer.OnInitializedListener {
 
-    private Button buttonChoose;
+    private Button buttonChoose,buttonRecord;
     private Button buttonUpload;
-    private TextView textView;
+    private TextView textView,textTerm;
     private TextView textViewResponse;
+    Uri uri;
+    //VideoView showVideo;
+
+    //private String pathToStoredVideo;
 
     private static final int SELECT_VIDEO = 3;
+    private static final int RECORD_VIDEO = 10;
 
     private String selectedPath;
+
+    private YouTubePlayerFragment playerFragment;
+    private YouTubePlayer mPlayer;
+    private String YouTubeKey = "";
+    private MyPlayerStateChangeListener playerStateChangeListener;
+
 
     public static final String UPLOADVIDEO_URL= "http://awla.senangpark.com/api/uploadvid.php";
 
@@ -50,12 +71,33 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
 
         buttonChoose = findViewById(R.id.buttonChoose);
         buttonUpload = findViewById(R.id.buttonUpload);
+        buttonRecord = findViewById(R.id.record);
+        //showVideo = findViewById(R.id.videoView);
 
         textView = findViewById(R.id.textView);
         textViewResponse = findViewById(R.id.textViewResponse);
+        textTerm = findViewById(R.id.termServ);
+
+        playerStateChangeListener = new MyPlayerStateChangeListener();
+
+        playerFragment =
+                (YouTubePlayerFragment) getFragmentManager().findFragmentById(R.id.youtube_player_fragment);
+
+        playerFragment.initialize(YouTubeKey, this);
 
         buttonChoose.setOnClickListener(this);
         buttonUpload.setOnClickListener(this);
+
+        buttonRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent videoCaptureIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                if(videoCaptureIntent.resolveActivity(getPackageManager()) != null){
+                    startActivityForResult(videoCaptureIntent, RECORD_VIDEO);
+                }
+            }
+        });
 
 
 
@@ -72,15 +114,38 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_VIDEO) {
+        if (requestCode== SELECT_VIDEO) {
+            if (resultCode == RESULT_OK) {
                 System.out.println("SELECT_VIDEO");
                 Uri selectedImageUri = data.getData();
                 selectedPath = getPath(selectedImageUri);
-                textView.setText(selectedPath);
+                buttonUpload.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.VISIBLE);
+                textTerm.setVisibility(View.VISIBLE);
+                textView.setText("Lokasi Video: "+selectedPath);
+                //showVideo.setVideoURI(selectedImageUri);
+                //showVideo.start();
+
             }
-        }
-    }
+        }else if (requestCode== RECORD_VIDEO) {
+            if (resultCode == RESULT_OK) {
+                uri = data.getData();
+                if(EasyPermissions.hasPermissions(RecordInterview.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+
+                    //showVideo.setVideoURI(uri);
+                   // showVideo.start();
+                    selectedPath = getRealPathFromURIPath(uri, RecordInterview.this);
+                    buttonUpload.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.VISIBLE);
+                    textTerm.setVisibility(View.VISIBLE);
+                    textView.setText("Lokasi Video: "+selectedPath);
+                    //Store the video to your server
+
+                }else{
+                    EasyPermissions.requestPermissions(RecordInterview.this, getString(R.string.read_file), 11, Manifest.permission.READ_EXTERNAL_STORAGE);
+                }
+            }
+    }}
 
     public String getPath(Uri uri) {
         Cursor cursor = getContentResolver().query(uri, null, null, null, null);
@@ -123,7 +188,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
-
+/*
     private void uploadVideo() {
         class UploadVideo extends AsyncTask<Void, Void, String> {
 
@@ -152,7 +217,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         }
         UploadVideo uv = new UploadVideo();
         uv.execute();
-    }
+    }*/
 
 
     @Override
@@ -163,12 +228,6 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         if (v == buttonUpload) {
            uploadMultipart();
         }
-    }@Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        // Forward results to EasyPermissions
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
 
@@ -196,6 +255,109 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select a Video "), SELECT_VIDEO);
             return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, RecordInterview.this);
+    }
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        if(uri != null){
+            if(EasyPermissions.hasPermissions(RecordInterview.this, android.Manifest.permission.READ_EXTERNAL_STORAGE)){
+
+                //showVideo.setVideoURI(uri);
+                //showVideo.start();
+                selectedPath = getRealPathFromURIPath(uri, RecordInterview.this);
+                buttonUpload.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.VISIBLE);
+                textTerm.setVisibility(View.VISIBLE);
+                textView.setText("Lokasi Video: "+selectedPath);
+
+            }
+        }
+    }
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.d("Zzz", "User has denied requested permission");
+    }
+
+    private String getRealPathFromURIPath(Uri contentURI, Activity activity) {
+        Cursor cursor = activity.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            return contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            return cursor.getString(idx);
+        }
+    }
+
+    @Override
+    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player,
+                                        boolean wasRestored) {
+        player.setPlayerStateChangeListener(playerStateChangeListener);
+
+        mPlayer = player;
+
+        //Enables automatic control of orientation
+        mPlayer.setFullscreenControlFlags(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_ORIENTATION);
+
+        //Show full screen in landscape mode always
+        mPlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_ALWAYS_FULLSCREEN_IN_LANDSCAPE);
+
+        //System controls will appear automatically
+        mPlayer.addFullscreenControlFlag(YouTubePlayer.FULLSCREEN_FLAG_CONTROL_SYSTEM_UI);
+
+        if (!wasRestored) {
+            //player.cueVideo("9rLZYyMbJic");
+            mPlayer.loadVideo("Et6pvq1eXhU");
+        }
+        else
+        {
+            mPlayer.play();
+        }
+    }
+
+    @Override
+    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                        YouTubeInitializationResult errorReason) {
+        mPlayer = null;
+    }
+
+    private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
+
+        @Override
+        public void onLoading() {
+            // Called when the player is loading a video
+            // At this point, it's not ready to accept commands affecting playback such as play() or pause()
+        }
+
+        @Override
+        public void onLoaded(String s) {
+            // Called when a video is done loading.
+            // Playback methods such as play(), pause() or seekToMillis(int) may be called after this callback.
+        }
+
+        @Override
+        public void onAdStarted() {
+            // Called when playback of an advertisement starts.
+        }
+
+        @Override
+        public void onVideoStarted() {
+            // Called when playback of the video starts.
+        }
+
+        @Override
+        public void onVideoEnded() {
+        }
+
+        @Override
+        public void onError(YouTubePlayer.ErrorReason errorReason) {
+            // Called when an error occurs.
         }
     }
 }
