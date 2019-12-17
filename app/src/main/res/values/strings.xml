@@ -2,5 +2,9 @@
     <string name="app_name">AWLA</string>
     <string name="upload_video">UPLOAD VIDEO</string>
     <string name="read_file">This app needs access to your file storage so that it can read video.</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="txt_confirm">Did you confirm your application?</string>
+    <string name="txt_tnc">If you press <b>YES</b>, you agree to allow us to use your contact details to communicate with you on any issues or promotions on regards of our services</string>
+    <string name="title_noncomplete">Processing</string>
     <string name="term">Dengan menekan butang <b>HANTAR</b>, anda membenarkan kami untuk menyimpan maklumat diri anda dan maklumat ini mungkin akan diberikan kepada bakal majikan</string>
 </resources>

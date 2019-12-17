@@ -56,9 +56,18 @@
         android:gravity="bottom"
         android:padding="10dp"
         android:orientation="vertical">
-
         <Button
-            android:id="@+id/registerBtn"
+            android:layout_marginTop="20dp"
+            android:id="@+id/btntoRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:textStyle="bold"
+            android:textColor="@color/colorMustard"
+            android:layout_marginBottom="20dp"
+            android:text="Belum Daftar ?  Tekan Sini" />
+        <Button
+            android:id="@+id/logBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

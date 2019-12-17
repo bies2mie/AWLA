@@ -70,6 +70,27 @@
                 android:text="Cari" />
         </LinearLayout>
     </LinearLayout>
+    <ImageView
+        android:id="@+id/imageViewGone"
+        android:layout_marginTop="150dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/ic_no_food" />
+
+    <TextView
+        android:id="@+id/textViewGone"
+        android:textColor="#b30000"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textStyle="bold|italic"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="No new job position available" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
         android:id="@+id/recylcerView"

@@ -38,7 +38,7 @@ import java.util.Map;
 public class RegisterPage extends AppCompatActivity {
 
     Button register;
-    EditText name,age,email,workexp,pass,confirmPass;
+    EditText name,age,email,workexp,pass,confirmPass,phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class RegisterPage extends AppCompatActivity {
         age = findViewById(R.id.regisAge);
         workexp = findViewById(R.id.regisWorkExp);
         email = findViewById(R.id.regisEmail);
+        phone = findViewById(R.id.regisPhone);
         pass = findViewById(R.id.regisPass);
         confirmPass = findViewById(R.id.regisConfirmPass);
 
@@ -64,6 +65,7 @@ public class RegisterPage extends AppCompatActivity {
                 final String ag = age.getText().toString().trim();
                 final String wexp = workexp.getText().toString().trim();
                 final String pss = pass.getText().toString().trim();
+                final String ph = phone.getText().toString().trim();
                 String conpss = confirmPass.getText().toString().trim();
 
                 if (nm.length()<5) {
@@ -86,7 +88,11 @@ public class RegisterPage extends AppCompatActivity {
                 }else if(wexp.length()<1) {
                     Toast.makeText(getApplicationContext(), "Please enter work experience",
                             Toast.LENGTH_LONG).show();
+                }else if(ph.length()<10) {
+                    Toast.makeText(getApplicationContext(), "Please enter proper phone number",
+                            Toast.LENGTH_LONG).show();
                 }
+
 
                 else{
 
@@ -138,6 +144,7 @@ public class RegisterPage extends AppCompatActivity {
                             params.put("userName", nm);
                             params.put("userAge", ag);
                             params.put("userEmail", em);
+                            params.put("userPhone", ph);
                             params.put("userPass", pss);
                             params.put("userWorkExp", wexp);
                             return params;
