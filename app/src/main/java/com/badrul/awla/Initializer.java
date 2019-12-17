@@ -7,7 +7,7 @@ import net.gotev.uploadservice.UploadService;
 
 public class Initializer extends Application {
 
-    @Override
+
     public void onCreate() {
         super.onCreate();
         // setup the broadcast action namespace string which will
@@ -16,5 +16,10 @@ public class Initializer extends Application {
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
         // Or, you can define it manually.
         UploadService.NAMESPACE = "com.badrul.awla";
+
+        FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/sofiapromedium.ttf");
+        FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/sofiapromedium.ttf");
+        FontsOverride.setDefaultFont(this, "SERIF", "fonts/sofiapromedium.ttf");
+        FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/sofiapromedium.ttf");
     }
 }

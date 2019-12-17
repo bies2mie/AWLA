@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     tools:context=".RegisterPage">
 
     <ScrollView
@@ -44,6 +45,17 @@
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
                 android:hint="Kata Laluan"
+                android:inputType="textPassword" />
+
+            <EditText
+                android:id="@+id/regisConfirmPass"
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:padding="15dp"
+                android:background="@drawable/textboxcornerblack"
+                android:hint="Sahkan Kata Laluan"
                 android:inputType="textPassword" />
 
             <EditText
