@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -31,20 +32,28 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.ServerResponse;
+import net.gotev.uploadservice.UploadInfo;
 import net.gotev.uploadservice.UploadNotificationConfig;
+import net.gotev.uploadservice.UploadServiceSingleBroadcastReceiver;
+import net.gotev.uploadservice.UploadStatusDelegate;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
 
-public class RecordInterview extends AppCompatActivity implements View.OnClickListener,EasyPermissions.PermissionCallbacks,YouTubePlayer.OnInitializedListener {
+public class RecordInterview extends AppCompatActivity implements View.OnClickListener,EasyPermissions.PermissionCallbacks,YouTubePlayer.OnInitializedListener, UploadStatusDelegate {
 
     private Button buttonChoose,buttonRecord;
     private Button buttonUpload;
     private TextView textView,textTerm;
     private TextView textViewResponse;
+    private static final String TAG = "AndroidUploadService";
+
+    private UploadServiceSingleBroadcastReceiver uploadReceiver;
     Uri uri;
     //VideoView showVideo;
 
@@ -57,8 +66,15 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
 
     private YouTubePlayerFragment playerFragment;
     private YouTubePlayer mPlayer;
+
     private String YouTubeKey = "";
+
     private MyPlayerStateChangeListener playerStateChangeListener;
+    String userID;
+    String jobID;
+    String jobTitle,companyTitle;
+    TextToSpeech myTTS;
+    final String question = "Please tell more about yourself";
 
 
     public static final String UPLOADVIDEO_URL= "http://awla.senangpark.com/api/uploadvid.php";
@@ -69,14 +85,44 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_interview);
 
+        uploadReceiver = new UploadServiceSingleBroadcastReceiver(this);
+
         buttonChoose = findViewById(R.id.buttonChoose);
         buttonUpload = findViewById(R.id.buttonUpload);
         buttonRecord = findViewById(R.id.record);
         //showVideo = findViewById(R.id.videoView);
+        TextView showJobTitle = findViewById(R.id.showJobTitle);
+        TextView showCompanyTitle = findViewById(R.id.showCompanyTitle);
+
 
         textView = findViewById(R.id.textView);
         textViewResponse = findViewById(R.id.textViewResponse);
         textTerm = findViewById(R.id.termServ);
+
+
+
+        myTTS = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status != TextToSpeech.ERROR) {
+                    // replace this Locale with whatever you want
+                    Locale localeToUse = new Locale("en","UK");
+                    myTTS.setLanguage(localeToUse);
+                    myTTS.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                }
+            }
+        });
+
+
+        SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        userID = sharedPreferences.getString(Config.U_USER_ID, "Not Available");
+        jobID = sharedPreferences.getString(Config.A_JOB_ID, "Not Available");
+        jobTitle = sharedPreferences.getString(Config.A_JOB_POSITION, "Not Available");
+        companyTitle = sharedPreferences.getString(Config.A_COMPANY_NAME, "Not Available");
+
+
+        showJobTitle.setText(jobTitle);
+        showCompanyTitle.setText(companyTitle);
 
         playerStateChangeListener = new MyPlayerStateChangeListener();
 
@@ -88,6 +134,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         buttonChoose.setOnClickListener(this);
         buttonUpload.setOnClickListener(this);
 
+
         buttonRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -98,7 +145,6 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
-
 
 
     }
@@ -122,7 +168,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
                 buttonUpload.setVisibility(View.VISIBLE);
                 textView.setVisibility(View.VISIBLE);
                 textTerm.setVisibility(View.VISIBLE);
-                textView.setText("Lokasi Video: "+selectedPath);
+                textView.setText("Video Path: "+selectedPath);
                 //showVideo.setVideoURI(selectedImageUri);
                 //showVideo.start();
 
@@ -138,7 +184,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
                     buttonUpload.setVisibility(View.VISIBLE);
                     textView.setVisibility(View.VISIBLE);
                     textTerm.setVisibility(View.VISIBLE);
-                    textView.setText("Lokasi Video: "+selectedPath);
+                    textView.setText("Video Path: "+selectedPath);
                     //Store the video to your server
 
                 }else{
@@ -163,6 +209,17 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
 
         return path;
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        uploadReceiver.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        uploadReceiver.unregister(this);
+    }
 
     public void uploadMultipart() {
         //getting name for the image
@@ -178,7 +235,9 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
                 //Creating a multi part request
                 new MultipartUploadRequest(this, uploadId, UPLOADVIDEO_URL)
                         .addFileToUpload(selectedPath, "video") //Adding file
-                        .addParameter("name", "test") //Adding text parameter to the request
+                        .addParameter("name", "test")
+                        .addParameter("jobID", jobID)
+                        .addParameter("userID", userID)//Adding text parameter to the request
                         .setNotificationConfig(new UploadNotificationConfig())
                         .setMaxRetries(2)
                         .startUpload(); //Starting the upload
@@ -274,7 +333,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
                 buttonUpload.setVisibility(View.VISIBLE);
                 textView.setVisibility(View.VISIBLE);
                 textTerm.setVisibility(View.VISIBLE);
-                textView.setText("Lokasi Video: "+selectedPath);
+                textView.setText("Video Path: "+selectedPath);
 
             }
         }
@@ -327,6 +386,33 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         mPlayer = null;
     }
 
+    @Override
+    public void onProgress(Context context, UploadInfo uploadInfo) {
+
+    }
+
+    @Override
+    public void onError(Context context, UploadInfo uploadInfo, ServerResponse serverResponse, Exception exception) {
+
+        Toast.makeText(this, "Error.Please Try Again.", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
+
+        Intent intent = new Intent(RecordInterview.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onCancelled(Context context, UploadInfo uploadInfo) {
+
+        Toast.makeText(this, "Upload Cancelled", Toast.LENGTH_LONG).show();
+
+    }
+
     private final class MyPlayerStateChangeListener implements YouTubePlayer.PlayerStateChangeListener {
 
         @Override
@@ -359,5 +445,15 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         public void onError(YouTubePlayer.ErrorReason errorReason) {
             // Called when an error occurs.
         }
+    } @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (myTTS != null) {
+            myTTS.stop();
+            myTTS.shutdown();
+        }
+
+
+
     }
 }

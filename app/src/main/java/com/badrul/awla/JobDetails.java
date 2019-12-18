@@ -117,7 +117,7 @@ public class JobDetails extends AppCompatActivity {
 
                                                 loading.dismiss();
 
-                                                if(response.contains("Successfully Apply")){
+                                                if(response.contains("Success")){
 
                                                     Toast.makeText(JobDetails.this, "Apply success. Thank you", Toast.LENGTH_LONG)
                                                             .show();
@@ -125,9 +125,9 @@ public class JobDetails extends AppCompatActivity {
 
 
                                                 }
-                                                else if(response.contains("Could not Apply")) {
+                                                else if(response.contains("Exist")) {
 
-                                                    Toast.makeText(JobDetails.this, "Could not apply. Please try again", Toast.LENGTH_LONG)
+                                                    Toast.makeText(JobDetails.this, "You already apply for this position", Toast.LENGTH_LONG)
                                                             .show();
                                                 }
                                             }

@@ -22,7 +22,7 @@
             android:textSize="50dp"
             android:layout_marginTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Utama" />
+            android:text="Main" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Temu Duga Seterusnya"
+                    android:text="Next Interview"
                     android:textAlignment="center" />
             </LinearLayout>
 
@@ -77,7 +77,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Temu Duga Lepas"
+                    android:text="Pass Interview"
                     android:textAlignment="center" />
             </LinearLayout>
         </LinearLayout>
@@ -110,7 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Pohon Pekerjaan"
+                    android:text="Apply Job"
                     android:textAlignment="center" />
             </LinearLayout>
 
@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:textAlignment="center"
-                    android:text="Profil" />
+                    android:text="Profile" />
             </LinearLayout>
         </LinearLayout>
 

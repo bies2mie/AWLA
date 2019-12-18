@@ -14,18 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
-        <activity android:name=".RecordInterview" android:screenOrientation="portrait"> <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+        <activity android:name=".RecordInterview" android:screenOrientation="portrait"></activity>
         <activity android:name=".FutureInterview" android:screenOrientation="portrait"/>
         <activity android:name=".JobDetails" android:screenOrientation="portrait"/>
         <activity android:name=".ApplyJob" android:screenOrientation="portrait"/>
         <activity
             android:name=".LoginPage"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".RegisterPage"

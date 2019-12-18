@@ -29,12 +29,15 @@ public class Config {
     public static final String J_COMPANY_ID = "j_CompanyID";
     public static final String J_COMPANY_NAME = "j_CompanyName";
     public static final String J_COMPANY_LOGO = "j_CompanyLogo";
-    private String jobID;
-    private String jobPosition;
-    private String jobDetails;
-    private String jobOpenDate;
-    private String jobCloseDate;
-    private String jobCategory;
-    private String companyID;
-    private String companyName;
+
+    public static final String A_JOB_ID = "a_jobID";
+    public static final String A_JOB_POSITION = "a_jobPosition";
+    public static final String A_JOB_DETAILS= "a_jobDetails";
+    public static final String A_JOB_OPEN_DATE = "a_jobOpenDate";
+    public static final String A_JOB_CLOSE_DATE= "a_jobCloseDate";
+    public static final String A_JOB_CATEGORY = "a_jobCategory";
+    public static final String A_COMPANY_ID = "a_CompanyID";
+    public static final String A_COMPANY_NAME = "a_CompanyName";
+    public static final String A_COMPANY_LOGO = "a_CompanyLogo";
+
 }

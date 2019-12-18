@@ -81,7 +81,7 @@
             android:elevation="10px"
             android:layout_marginTop="10dp"
             android:background="@drawable/buttoncornerblack"
-            android:text="Pohon"
+            android:text="Apply"
             android:textColor="@color/colorWhite" />
     </LinearLayout>
 </LinearLayout>

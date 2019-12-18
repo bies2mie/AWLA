@@ -22,7 +22,7 @@
             android:textSize="30dp"
             android:layout_marginTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Pohon Pekerjaan" />
+            android:text="Apply Job" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                     android:padding="10dp"
                     android:background="@drawable/textboxcornerblack"
                     android:inputType="textPersonName"
-                    android:hint="Cari Jawatan" />
+                    android:hint="Search Job" />
             </LinearLayout>
 
             <Button
@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:layout_gravity="center"
-                android:text="Cari" />
+                android:text="Search" />
         </LinearLayout>
     </LinearLayout>
     <ImageView

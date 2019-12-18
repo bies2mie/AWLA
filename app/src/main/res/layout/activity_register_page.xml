@@ -21,7 +21,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Daftar"
+                android:text="Register"
                 android:textColor="@color/colorBlack"
                 android:textSize="50dp" />
 
@@ -33,7 +33,7 @@
                 android:ems="10"
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
-                android:hint="Nama"
+                android:hint="Name"
                 android:inputType="textPersonName" />
 
             <EditText
@@ -44,7 +44,7 @@
                 android:ems="10"
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
-                android:hint="Kata Laluan"
+                android:hint="Password"
                 android:inputType="textPassword" />
 
             <EditText
@@ -55,7 +55,7 @@
                 android:ems="10"
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
-                android:hint="Sahkan Kata Laluan"
+                android:hint="Confirm Password"
                 android:inputType="textPassword" />
 
             <EditText
@@ -66,7 +66,7 @@
                 android:ems="10"
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
-                android:hint="Emel"
+                android:hint="Email"
                 android:inputType="textEmailAddress" />
 
             <EditText
@@ -77,7 +77,7 @@
                 android:ems="10"
                 android:padding="15dp"
                 android:background="@drawable/textboxcornerblack"
-                android:hint="Phone"
+                android:hint="Phone Number"
                 android:inputType="phone" />
 
             <LinearLayout
@@ -94,7 +94,7 @@
                     android:layout_marginRight="5dp"
                     android:padding="15dp"
                     android:background="@drawable/textboxcornerblack"
-                    android:hint="Umur"
+                    android:hint="Age"
                     android:layout_weight="1"
                     android:inputType="number" />
 
@@ -108,7 +108,7 @@
                     android:padding="15dp"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/textboxcornerblack"
-                    android:hint="Pengalaman Kerja"
+                    android:hint="Work Experience"
                     android:inputType="number" />
 
             </LinearLayout>
@@ -131,7 +131,7 @@
             android:layout_marginBottom="10dp"
             android:textColor="@color/colorWhite"
             android:background="@drawable/buttoncornerblack"
-            android:text="Daftar" />
+            android:text="Register" />
     </LinearLayout>
 
 </LinearLayout>
