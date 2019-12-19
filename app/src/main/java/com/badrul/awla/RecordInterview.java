@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
 import android.text.Html;
@@ -52,6 +54,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
     private TextView textView,textTerm;
     private TextView textViewResponse;
     private static final String TAG = "AndroidUploadService";
+    ProgressDialog loading;
 
     private UploadServiceSingleBroadcastReceiver uploadReceiver;
     Uri uri;
@@ -75,7 +78,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
     String jobTitle,companyTitle;
     TextToSpeech myTTS;
     final String question = "Please tell more about yourself";
-
+    final String question2 = "Cerita mengenai diri anda";
 
     public static final String UPLOADVIDEO_URL= "http://awla.senangpark.com/api/uploadvid.php";
 
@@ -99,19 +102,26 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         textViewResponse = findViewById(R.id.textViewResponse);
         textTerm = findViewById(R.id.termServ);
 
-
-
-        myTTS = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
-            public void onInit(int status) {
-                if (status != TextToSpeech.ERROR) {
-                    // replace this Locale with whatever you want
-                    Locale localeToUse = new Locale("en","UK");
-                    myTTS.setLanguage(localeToUse);
-                    myTTS.speak(question, TextToSpeech.QUEUE_FLUSH, null);
-                }
+            public void run() {
+                //Do something here
+                myTTS = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        if (status != TextToSpeech.ERROR) {
+                            // replace this Locale with whatever you want
+                            Locale localeToUse = new Locale("en","UK");
+                            myTTS.setLanguage(localeToUse);
+                            myTTS.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    }
+                });
+
             }
-        });
+        }, 4000);
+
+
 
 
         SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -230,7 +240,11 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
         } else {
             //Uploading code
             try {
+                loading = ProgressDialog.show(RecordInterview.this,"Please Wait","Uploading Video",false,false);
+
+
                 String uploadId = UUID.randomUUID().toString();
+                uploadReceiver.setUploadID(uploadId);
 
                 //Creating a multi part request
                 new MultipartUploadRequest(this, uploadId, UPLOADVIDEO_URL)
@@ -372,7 +386,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
 
         if (!wasRestored) {
             //player.cueVideo("9rLZYyMbJic");
-            mPlayer.loadVideo("Et6pvq1eXhU");
+            mPlayer.loadVideo("twIPJ0h_W50");
         }
         else
         {
@@ -395,11 +409,14 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
     public void onError(Context context, UploadInfo uploadInfo, ServerResponse serverResponse, Exception exception) {
 
         Toast.makeText(this, "Error.Please Try Again.", Toast.LENGTH_LONG).show();
+        loading.dismiss();
     }
 
     @Override
     public void onCompleted(Context context, UploadInfo uploadInfo, ServerResponse serverResponse) {
 
+        loading.dismiss();
+        Toast.makeText(this, "Upload Successful", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(RecordInterview.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -409,6 +426,7 @@ public class RecordInterview extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onCancelled(Context context, UploadInfo uploadInfo) {
 
+        loading.dismiss();
         Toast.makeText(this, "Upload Cancelled", Toast.LENGTH_LONG).show();
 
     }

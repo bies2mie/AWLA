@@ -9,10 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,11 +31,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-public class FutureInterview extends AppCompatActivity implements ApplyJobAdapter.OnItemClicked{
+public class PastInterview extends AppCompatActivity implements ApplyJobAdapter.OnItemClicked{
 
-    Button searchJob;
     ImageView imgGone,imgJobOff;
     TextView txtGone,txtJobOff;
     List<Job> jobList;
@@ -48,11 +43,10 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
     //the recyclerview
     RecyclerView recyclerView;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_future_interview);
+        setContentView(R.layout.activity_past_interview);
 
         recyclerView = findViewById(R.id.recylcerView);
         imgGone = findViewById(R.id.imageViewGone);
@@ -76,10 +70,10 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
 
     }
 
-    public void loadJob(){
-        final ProgressDialog loading = ProgressDialog.show(this,"Please Wait","Contacting Server",false,false);
+    public void loadJob() {
+        final ProgressDialog loading = ProgressDialog.show(this, "Please Wait", "Contacting Server", false, false);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.URL_API+"loadapplyjob.php?userID="+userID,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.URL_API + "loadpassiv.php?userID=" + userID,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -110,12 +104,12 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
                             //creating adapter object and setting it to recyclerview
                             ApplyJobAdapter adapter = new ApplyJobAdapter(getApplicationContext(), jobList);
                             recyclerView.setAdapter(adapter);
-                            adapter.setOnClick(FutureInterview.this);
+                            adapter.setOnClick(PastInterview.this);
 
                             if (adapter.getItemCount() == 0) {
                                 imgGone.setVisibility(View.VISIBLE);
                                 txtGone.setVisibility(View.VISIBLE);
-                            } else{
+                            } else {
 
                                 imgGone.setVisibility(View.GONE);
                                 txtGone.setVisibility(View.GONE);
@@ -134,12 +128,11 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
                     public void onErrorResponse(VolleyError error) {
                         loading.dismiss();
                         if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                            Toast.makeText(FutureInterview.this,"No internet . Please check your connection",
+                            Toast.makeText(PastInterview.this, "No internet . Please check your connection",
                                     Toast.LENGTH_LONG).show();
-                        }
-                        else{
+                        } else {
 
-                            Toast.makeText(FutureInterview.this, error.toString(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(PastInterview.this, error.toString(), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -152,7 +145,9 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
         requestQueue.add(stringRequest);
 
 
-    } @Override
+    }
+
+    @Override
     public void onItemClick(int position) {
         // The onClick implementation of the RecyclerView item click
         //ur intent code here
@@ -168,23 +163,25 @@ public class FutureInterview extends AppCompatActivity implements ApplyJobAdapte
 
         // Adding values to editor
 
-        editor.putString(Config.A_JOB_ID, job.getJobID());
-        editor.putString(Config.A_JOB_POSITION, job.getJobPosition());
-        editor.putString(Config.A_JOB_DETAILS, job.getJobDetails());
-        editor.putString(Config.A_JOB_OPEN_DATE, job.getJobOpenDate());
-        editor.putString(Config.A_JOB_CLOSE_DATE, job.getJobCloseDate());
-        editor.putString(Config.A_JOB_CATEGORY, job.getJobCategory());
-        editor.putString(Config.A_COMPANY_ID, job.getCompanyID());
-        editor.putString(Config.A_COMPANY_NAME, job.getCompanyName());
-        editor.putString(Config.A_COMPANY_LOGO, job.getCompanyLogo());
+        editor.putString(Config.J_JOB_ID, job.getJobID());
+        editor.putString(Config.J_JOB_POSITION, job.getJobPosition());
+        editor.putString(Config.J_JOB_DETAILS, job.getJobDetails());
+        editor.putString(Config.J_JOB_OPEN_DATE, job.getJobOpenDate());
+        editor.putString(Config.J_JOB_CLOSE_DATE, job.getJobCloseDate());
+        editor.putString(Config.J_JOB_CATEGORY, job.getJobCategory());
+        editor.putString(Config.J_COMPANY_ID, job.getCompanyID());
+        editor.putString(Config.J_COMPANY_NAME, job.getCompanyName());
+        editor.putString(Config.J_COMPANY_LOGO, job.getCompanyLogo());
+        editor.putString(Config.FROM_APPLY, "NO");
 
 
         // Saving values to editor
         editor.commit();
 
-        Intent i = new Intent(FutureInterview.this, RecordInterview.class);
+        Intent i = new Intent(PastInterview.this, JobDetails.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
         //finish();
     }
+
 }

@@ -2,22 +2,31 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.badrul.awla">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:allowBackup="true"
         android:name=".Initializer"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/SplashTheme">
-        <activity android:name=".RecordInterview" android:screenOrientation="portrait"></activity>
-        <activity android:name=".FutureInterview" android:screenOrientation="portrait"/>
-        <activity android:name=".JobDetails" android:screenOrientation="portrait"/>
-        <activity android:name=".ApplyJob" android:screenOrientation="portrait"/>
+        <activity android:name=".PastInterview"></activity>
+        <activity
+            android:name=".RecordInterview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FutureInterview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".JobDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ApplyJob"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".LoginPage"
             android:screenOrientation="portrait">

@@ -2,7 +2,7 @@ package com.badrul.awla;
 
 public class Config {
 
-    public static final String URL_API = "https://awla.senangpark.com/api/";
+    public static final String URL_API = "http://awla.senangpark.com/api/";
     public static final String SHARED_PREF_NAME = "awla";
 
     //This would be used to store the phone number of current logged in user
@@ -40,4 +40,16 @@ public class Config {
     public static final String A_COMPANY_NAME = "a_CompanyName";
     public static final String A_COMPANY_LOGO = "a_CompanyLogo";
 
+
+    public static final String P_JOB_ID = "p_jobID";
+    public static final String P_JOB_POSITION = "p_jobPosition";
+    public static final String P_JOB_DETAILS= "p_jobDetails";
+    public static final String P_JOB_OPEN_DATE = "p_jobOpenDate";
+    public static final String P_JOB_CLOSE_DATE= "p_jobCloseDate";
+    public static final String P_JOB_CATEGORY = "p_jobCategory";
+    public static final String P_COMPANY_ID = "p_CompanyID";
+    public static final String P_COMPANY_NAME = "p_CompanyName";
+    public static final String P_COMPANY_LOGO = "p_CompanyLogo";
+
+    public static final String FROM_APPLY = "from_apply";
 }

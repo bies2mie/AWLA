@@ -61,6 +61,6 @@ public class Job {
         return companyName;
     }
     public String getCompanyLogo() {
-        return companyName;
+        return companyLogo;
     }
 }

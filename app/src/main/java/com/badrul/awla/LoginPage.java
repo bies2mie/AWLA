@@ -54,7 +54,7 @@ public class LoginPage extends AppCompatActivity {
     String userAge;
     String userWorkExp;
     String userToken;
-    String token;
+    String token = "123";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

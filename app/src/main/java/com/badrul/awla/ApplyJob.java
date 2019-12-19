@@ -59,6 +59,8 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
         setContentView(R.layout.activity_apply_job);
         recyclerView = findViewById(R.id.recylcerView);
         searchJob = findViewById(R.id.searchBtn);
+        imgGone = findViewById(R.id.imageViewGone);
+        txtGone = findViewById(R.id.textViewGone);
         sp = findViewById(R.id.category);
         sp.setOnItemSelectedListener(this);
         list = new ArrayList<>();
@@ -83,7 +85,7 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
 
         jobList = new ArrayList<>();
 
-        loadJob();
+        loadAllJob();
 
         searchJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +97,8 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
 
                 }else{
 
-
+                        jobList.clear();
+                        loadJob();
 
                 }
 
@@ -107,11 +110,93 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
     public void loadJob(){
         final ProgressDialog loading = ProgressDialog.show(this,"Please Wait","Contacting Server",false,false);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.URL_API+"loadjob?jobCategory="+locat,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.URL_API+"loadjob.php?jobCategory="+locat,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+
+
+                            //converting the string to json array object
+                            JSONArray array = new JSONArray(response);
+
+                            //traversing through all the object
+                            for (int i = 0; i < array.length(); i++) {
+
+                                //getting job object from json array
+                                JSONObject job = array.getJSONObject(i);
+
+                                //adding the job to job list
+                                jobList.add(new Job(
+                                        job.getString("jobID"),
+                                        job.getString("jobPosition"),
+                                        job.getString("jobDetails"),
+                                        job.getString("jobOpenDate"),
+                                        job.getString("jobCloseDate"),
+                                        job.getString("jobCategory"),
+                                        job.getString("companyID"),
+                                        job.getString("companyName"),
+                                        job.getString("companyLogo")
+                                ));
+                            }
+
+                            //creating adapter object and setting it to recyclerview
+                            ApplyJobAdapter adapter = new ApplyJobAdapter(getApplicationContext(), jobList);
+                            recyclerView.setAdapter(adapter);
+                            adapter.setOnClick(ApplyJob.this);
+
+                            if (adapter.getItemCount() == 0) {
+                                imgGone.setVisibility(View.VISIBLE);
+                                txtGone.setVisibility(View.VISIBLE);
+                            } else{
+
+                                imgGone.setVisibility(View.GONE);
+                                txtGone.setVisibility(View.GONE);
+                            }
+
+                            //add shared preference ID,nama,credit here
+                            loading.dismiss();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        loading.dismiss();
+                        if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                            Toast.makeText(ApplyJob.this,"No internet . Please check your connection",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else{
+
+                            Toast.makeText(ApplyJob.this, error.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                30000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        //adding our stringrequest to queue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+
+
+    }
+
+    public void loadAllJob(){
+        final ProgressDialog loading = ProgressDialog.show(this,"Please Wait","Contacting Server",false,false);
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, Config.URL_API+"loadalljob.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+
+
                             //converting the string to json array object
                             JSONArray array = new JSONArray(response);
 
@@ -189,6 +274,7 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
 
         // Showing selected spinner item
         Toast.makeText(parent.getContext(), "Selected: " + locat, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -222,7 +308,7 @@ public class ApplyJob extends AppCompatActivity implements AdapterView.OnItemSel
         editor.putString(Config.J_COMPANY_ID, job.getCompanyID());
         editor.putString(Config.J_COMPANY_NAME, job.getCompanyName());
         editor.putString(Config.J_COMPANY_LOGO, job.getCompanyLogo());
-
+        editor.putString(Config.FROM_APPLY, "YES");
 
         // Saving values to editor
         editor.commit();

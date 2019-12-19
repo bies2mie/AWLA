@@ -68,15 +68,25 @@ public class JobDetails extends AppCompatActivity {
         companyLogoURL = sharedPreferences.getString(Config.J_COMPANY_LOGO, "Not Available");
         jobPosition = sharedPreferences.getString(Config.J_JOB_POSITION, "Not Available");
         jobDetails = sharedPreferences.getString(Config.J_JOB_DETAILS, "Not Available");
+        String from_apply = sharedPreferences.getString(Config.FROM_APPLY, "Not Available");
 
         jobTitleTxt.setText(jobPosition);
         companyNameTxt.setText(companyName);
         jobDetailsTxt.setText(jobDetails);
 
+        if("YES".equalsIgnoreCase(from_apply)){
+            applyBtn.setVisibility(View.VISIBLE);
+
+        }else{
+
+
+            applyBtn.setVisibility(View.GONE);
+        }
+
         RequestOptions options = new RequestOptions().centerCrop().dontAnimate().placeholder(R.drawable.ic_launcher).error(R.drawable.ic_launcher);
         Glide
                 .with(JobDetails.this)
-                .load(companyLogoImg).apply(options).listener(new RequestListener<Drawable>() {
+                .load(companyLogoURL).apply(options).listener(new RequestListener<Drawable>() {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                 progressBar.setVisibility(View.GONE);
@@ -102,7 +112,7 @@ public class JobDetails extends AppCompatActivity {
 
                 final Dialog dialog = new Dialog(JobDetails.this);
 
-                alertDialogBuilder.setPositiveButton("YA",
+                alertDialogBuilder.setPositiveButton("YES",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {
@@ -122,12 +132,17 @@ public class JobDetails extends AppCompatActivity {
                                                     Toast.makeText(JobDetails.this, "Apply success. Thank you", Toast.LENGTH_LONG)
                                                             .show();
 
+                                                    Intent intent = new Intent(JobDetails.this, ApplyJob.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                    finish();
+
 
 
                                                 }
                                                 else if(response.contains("Exist")) {
 
-                                                    Toast.makeText(JobDetails.this, "You already apply for this position", Toast.LENGTH_LONG)
+                                                    Toast.makeText(JobDetails.this, "Sorry. You already apply for this position", Toast.LENGTH_LONG)
                                                             .show();
                                                 }
                                             }
@@ -169,7 +184,7 @@ public class JobDetails extends AppCompatActivity {
 
                         });
 
-                alertDialogBuilder.setNegativeButton("TIDAK",
+                alertDialogBuilder.setNegativeButton("NO",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface arg0, int arg1) {

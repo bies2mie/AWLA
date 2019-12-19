@@ -19,7 +19,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/adaptergreystroke"
             android:paddingBottom="10dp"
-            android:text="Next Interview"
+            android:text="Past Interview"
             android:textAlignment="center"
             android:textColor="@color/colorBlack"
             android:textSize="30dp" />
@@ -44,7 +44,7 @@
         android:textStyle="bold|italic"
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="No new job interview available" />
+        android:text="No past interview available" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="10dp"
